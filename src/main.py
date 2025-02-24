@@ -20,7 +20,21 @@ if "client" not in st.session_state:
 if "camera" not in st.session_state:
     st.session_state.camera = None
 
-st.title("Webcam Live Feed")
+st.title("Webcam Live Airdrawing")
+st.empty()
+st.markdown(
+    """
+    ---
+
+    This app allows you to draw on the screen using your index finger.
+
+    You can also erase the drawing by using your index and middle finger together.
+
+    You can change the color of the drawing or erase it using the sidebar (deactivate camera for this).
+
+    ---
+    """
+)
 enabled = st.checkbox("Camera On", value=False)
 
 if enabled:
@@ -60,10 +74,9 @@ if enabled:
             frames.image(processed_frame)
 
 
-st.button("Clear Drawing", on_click=clear_canvas)
-
-
 with st.sidebar:
+    st.button("Clear Drawing", on_click=clear_canvas)
+
     color = st.radio(
         "**Choose a color**",
         ["Green 🟩", "Red 🟥", "Blue 🟦", "Yellow 🟨", "Orange 🟧", "Purple 🟪"],
