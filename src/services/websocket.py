@@ -1,6 +1,4 @@
 import asyncio
-import base64
-import json
 from queue import Queue
 from threading import Thread
 
@@ -27,27 +25,14 @@ class WebSocketClient:
                             frame = self.frame_queue.get()
 
                             # encode frame to jpg for lower resolution
-                            _, buffer = cv2.imencode(".jpg", frame)
-                            # convert frame to base64 for sending (bytes to string) better for websocket communication
-                            encoded_frame = base64.b64encode(buffer).decode("utf-8")
-
-                            # send frame
-                            await websocket.send(
-                                json.dumps(
-                                    {
-                                        "frame": encoded_frame,
-                                        "draw_color": list(self.draw_color),
-                                    }
-                                )
+                            _, buffer = cv2.imencode(
+                                ".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 50]
                             )
 
-                            # receive response
-                            response = await websocket.recv()
-                            response_data = json.loads(response)
+                            await websocket.send(buffer.tobytes())
 
-                            # decode base64 to numpy array
-                            img_data = base64.b64decode(response_data["frame"])
-                            img_array = np.frombuffer(img_data, np.uint8)
+                            response_img = await websocket.recv()
+                            img_array = np.frombuffer(response_img, np.uint8)
                             processed_frame = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
                             self.result_queue.put(processed_frame)

@@ -1,7 +1,7 @@
 import cv2
 import streamlit as st
 
-from services.api import clear_canvas
+from services.api import change_color, clear_canvas
 from services.websocket import WebSocketClient
 
 
@@ -70,14 +70,14 @@ with st.sidebar:
     )
 
     if color == "Green 🟩":
-        st.session_state.client.draw_color = (0, 255, 0)
+        change_color((0, 255, 0))
     elif color == "Red 🟥":
-        st.session_state.client.draw_color = (0, 0, 255)
+        change_color((0, 0, 255))
     elif color == "Blue 🟦":
-        st.session_state.client.draw_color = (255, 0, 0)
+        change_color((255, 0, 0))
     elif color == "Yellow 🟨":
-        st.session_state.client.draw_color = (0, 255, 255)
+        change_color((0, 255, 255))
     elif color == "Orange 🟧":
-        st.session_state.client.draw_color = (0, 165, 255)
+        change_color((0, 165, 255))
     elif color == "Purple 🟪":
-        st.session_state.client.draw_color = (128, 0, 128)
+        change_color((128, 0, 128))
