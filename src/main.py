@@ -6,10 +6,9 @@ from services.websocket import WebSocketClient
 
 
 def try_open_camera():
-    for index in [0, 1, 2]:
-        cap = cv2.VideoCapture(index)
-        if cap.isOpened():
-            return cap
+    cap = cv2.VideoCapture(0)
+    if cap.isOpened():
+        return cap
     return None
 
 
