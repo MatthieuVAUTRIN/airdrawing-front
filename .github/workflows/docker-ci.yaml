@@ -1,0 +1,34 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build the Docker image
+        run: docker build -f Dockerfile.front -t ghcr.io/matthieuvautrin/airdrawing-front:${{ github.sha }} .
+
+      - name: Install and run Container Structure Tests
+        run: |
+          curl -LO https://github.com/GoogleContainerTools/container-structure-test/releases/latest/download/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          mkdir -p $HOME/bin
+          export PATH=$PATH:$HOME/bin
+          mv container-structure-test-linux-amd64 $HOME/bin/container-structure-test
+          container-structure-test test --image ghcr.io/matthieuvautrin/airdrawing-front:${{ github.sha }} --config tests/cst-front.yaml
+
+      - name: Log in to the registry
+        run: docker login ghcr.io -u ${{ secrets.GITHUB_TOKEN }} -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push the Docker image
+        run: docker push ghcr.io/matthieuvautrin/airdrawing-front:${{ github.sha }}
