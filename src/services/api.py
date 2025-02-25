@@ -1,7 +1,9 @@
+import os
+
 import requests
 import streamlit as st
 
-BACKEND_URL = "http://localhost:8000"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 
 def clear_canvas():

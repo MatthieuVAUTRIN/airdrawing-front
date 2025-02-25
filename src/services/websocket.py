@@ -1,4 +1,5 @@
 import asyncio
+import os
 from queue import Queue
 from threading import Thread
 
@@ -6,7 +7,7 @@ import cv2
 import numpy as np
 import websockets
 
-WEBSOCKET_URL = "ws://localhost:8000/ws"
+WEBSOCKET_URL = os.getenv("WEBSOCKET_URL", "ws://localhost:8000/ws")
 
 
 class WebSocketClient:
