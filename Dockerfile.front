@@ -35,10 +35,13 @@ COPY --from=builder --chown=$USERNAME:$USERNAME /app/.venv /app/.venv
 
 ENV WEBSOCKET_URL=ws://backend:8000/ws
 ENV BACKEND_URL=http://backend:8000
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app/.venv/lib/python3.12/site-packages"
+
 
 EXPOSE 8501
 
 USER $USERNAME
 
 # Run the application
-CMD [".venv/bin/python3.12", "-m", "streamlit", "run",  "./src/main.py", "--server.port", "8501"]
+CMD ["python3.12", "-m", "streamlit", "run",  "./src/main.py", "--server.port", "8501"]
