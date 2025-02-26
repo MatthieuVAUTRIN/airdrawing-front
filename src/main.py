@@ -29,7 +29,7 @@ st.markdown(
 
     You can also erase the drawing by using your index and middle finger together.
 
-    You can change the color of the drawing or erase it using the sidebar (deactivate camera for this).
+    You can change the color of the drawing or erase it using the sidebar buttons.
 
     ---
     """
@@ -72,24 +72,30 @@ if enabled:
             processed_frame = cv2.cvtColor(processed_frame, cv2.COLOR_RGB2BGR)
             frames.image(processed_frame)
 
+COLORS = {
+    "Blue": {"rgb": (255, 0, 0), "emoji": "🟦"},
+    "Green": {"rgb": (0, 255, 0), "emoji": "🟩"},
+    "Red": {"rgb": (0, 0, 255), "emoji": "🟥"},
+    "Yellow": {"rgb": (0, 255, 255), "emoji": "🟨"},
+    "Orange": {"rgb": (0, 165, 255), "emoji": "🟧"},
+    "Purple": {"rgb": (128, 0, 128), "emoji": "🟪"},
+}
+
 
 with st.sidebar:
-    st.button("Clear Drawing", on_click=clear_canvas)
-
-    color = st.radio(
-        "**Choose a color**",
-        ["Green 🟩", "Red 🟥", "Blue 🟦", "Yellow 🟨", "Orange 🟧", "Purple 🟪"],
+    st.button(
+        "Clear Drawing", on_click=clear_canvas, use_container_width=True, icon="🗑️"
     )
 
-    if color == "Green 🟩":
-        change_color((0, 255, 0))
-    elif color == "Red 🟥":
-        change_color((0, 0, 255))
-    elif color == "Blue 🟦":
-        change_color((255, 0, 0))
-    elif color == "Yellow 🟨":
-        change_color((0, 255, 255))
-    elif color == "Orange 🟧":
-        change_color((0, 165, 255))
-    elif color == "Purple 🟪":
-        change_color((128, 0, 128))
+    st.markdown("---")
+    st.markdown("#### Choose Color")
+    st.write("\n")
+
+    for color_name, color_info in COLORS.items():
+        st.button(
+            f"{color_name}",
+            on_click=change_color,
+            args=(color_info["rgb"],),
+            icon=color_info["emoji"],
+            use_container_width=True,
+        )
